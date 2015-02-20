@@ -2,4 +2,8 @@
 
 {% block content %}
 <h2>{{ moment.identifier }}</h2>
+<p>Date: {{ moment.value }}</p>
+{% if moment.parent %}
+<p>Parent: {{ moment.parent }}</p>
+{% endif %}
 {% endblock %}
