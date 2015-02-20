@@ -4,7 +4,10 @@
 	<title>trackit</title>
 </head>
 <body>
-{% block header %}<h1>trackit</h1>{% endblock %}
+{% block header %}<h1><a href="{{ baseUrl() }}">trackit</a></h1>{% endblock %}
+{% if flash.error %}
+<p>{{ flash.error }}</p>
+{% endif %}
 {% block content %}{% endblock %}
 </body>
 </html>

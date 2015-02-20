@@ -24,7 +24,28 @@ class Index {
 		$stmt = $this->app->database->prepare('SELECT * FROM `moment` WHERE `identifier` = :identifier');
 		$stmt->execute([':identifier' => $moment]);
 		$moment = $stmt->fetchObject();
-		echo $this->app->view->render('moment.twig', ['moment' => $moment]);
+
+		$stmt = $this->app->database->prepare('SELECT * FROM `moment` WHERE `parent`= :identifier');
+		$stmt->execute([':identifier' => $moment->identifier]);
+		$children = $stmt->fetchAll();
+
+		$assignments = [
+			'moment' => $moment,
+			'children' => $children
+		];
+		echo $this->app->view->render('moment.twig', $assignments);
+	}
+	
+	public function add($parent) {
+		try {
+			$stmt = $this->app->database->prepare('INSERT INTO `moment` VALUES (UUID(), :parent, NOW(), 0)');
+			if(!$stmt->execute([':parent' => $parent])) {
+				throw new \PDOException();
+			}
+		} catch (\PDOException $e) {
+			$this->app->flash('error', 'Sorry, something went wrong!');
+		}
+		$this->app->redirect('/moment/' . $parent);
 	}
 }
 

@@ -7,6 +7,8 @@ define('trackit_root', realpath('..') . DIRECTORY_SEPARATOR);
 
 require_once trackit_root . 'vendor/autoload.php';
 
+session_start();
+
 $view = new Twig();
 $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
@@ -32,6 +34,12 @@ $app->get('/moment/:moment', function ($moment) use ($app) {
 	$controller = new Trackit\Controller\Index($app);
 	$controller->moment($moment);
 })->name('moment');
+
+
+$app->get('/moment/:moment/add', function ($moment) use ($app) {
+	$controller = new Trackit\Controller\Index($app);
+	$controller->add($moment);
+})->name('addMoment');
 
 $app->run();
 

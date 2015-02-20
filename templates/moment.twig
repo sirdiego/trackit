@@ -4,6 +4,14 @@
 <h2>{{ moment.identifier }}</h2>
 <p>Date: {{ moment.value }}</p>
 {% if moment.parent %}
-<p>Parent: {{ moment.parent }}</p>
+<p>Parent: <a href="{{ urlFor('moment', {'moment': moment.parent}) }}">{{ moment.parent }}</a></p>
 {% endif %}
+{% if children|length > 0 %}
+<ul>
+{% for child in children %}
+<li><a href="{{ urlFor('moment', {'moment': child.identifier}) }}">{{ child.identifier }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+<p><a href="{{ urlFor('addMoment', {'moment': moment.identifier}) }}">add</a></p>
 {% endblock %}
