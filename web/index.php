@@ -1,16 +1,17 @@
 <?php
-
 use Slim\Slim;
 use Slim\Views\Twig;
 
-require_once '../vendor/autoload.php';
+define('trackit_root', realpath('..') . DIRECTORY_SEPARATOR);
+
+require_once trackit_root . 'vendor/autoload.php';
 
 $view = new Twig();
 
-$config = [
+$config = include trackit_root . 'config/config.php';
+$config = array_merge($config, [
 	'view' => $view,
-	'templates.path' => '../templates/'
-];
+]);
 
 $app = new Slim($config);
 $app->get('/', function() use ($app) {
