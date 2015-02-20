@@ -4,5 +4,6 @@ return [
 	'database.dsn' => 'mysql:host=localhost;dbname=trackit;charset=utf8',
 	'database.user' => 'trackit',
 	'database.password' => '',
+	'debug' => false,
 ];
 

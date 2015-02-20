@@ -1,9 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>trackit</title>
-</head>
-<body>
-Hello {{ name }}!
-</body>
-</html>
+{% extends "layout.twig" %}
+
+{% block header %}
+<h1>{{ name }}</h1>
+{% endblock %}
+
+{% block content %}
+{% if moments|length > 0%}
+<ul>
+{% for moment in moments %}
+<li><a href="{{ urlFor('moment', {"moment": moment.identifier}) }}">{{ moment.identifier }} {{ moment.value }}</a></li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

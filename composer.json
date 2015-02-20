@@ -12,5 +12,8 @@
             "email": "diego@sirdiego.de"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "autoload": {
+        "psr-4": { "Diego\\Trackit\\": "src/" }
+    }
 }
