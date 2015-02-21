@@ -26,18 +26,18 @@ $app->container->singleton('database', function () use ($app) {
 });
 
 $app->get('/', function () use ($app) {
-	$controller = new Trackit\Controller\Index($app);
+	$controller = new Trackit\Controller\StopWatch($app);
 	$controller->index();
 });
 
 $app->get('/moment/:moment', function ($moment) use ($app) {
-	$controller = new Trackit\Controller\Index($app);
+	$controller = new Trackit\Controller\StopWatch($app);
 	$controller->moment($moment);
 })->name('moment');
 
 
 $app->get('/moment/:moment/add', function ($moment) use ($app) {
-	$controller = new Trackit\Controller\Index($app);
+	$controller = new Trackit\Controller\StopWatch($app);
 	$controller->add($moment);
 })->name('addMoment');
 

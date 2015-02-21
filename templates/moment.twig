@@ -6,6 +6,9 @@
 {% if moment.parent %}
 <p>Parent: <a href="{{ urlFor('moment', {'moment': moment.parent}) }}">{{ moment.parent }}</a></p>
 {% endif %}
+{% if moment.isStart %}
+<p>Stopwatch started here.</p>
+{% endif %}
 {% if children|length > 0 %}
 <ul>
 {% for child in children %}
