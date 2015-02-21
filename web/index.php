@@ -41,5 +41,10 @@ $app->get('/moment/:moment/add', function ($moment) use ($app) {
 	$controller->add($moment);
 })->name('addMoment');
 
+$app->get('/start/', function () use ($app) {
+	$controller = new Trackit\Controller\StopWatch($app);
+	$controller->start();
+})->name('start');
+
 $app->run();
 

@@ -21,12 +21,9 @@ class StopWatch {
 		echo $this->app->view->render('index.twig', $assignments);
 	}
 
-	public function moment($moment) {
-		$moment = Model\Moment::findByIdentifier($moment, $this->app->database);	
-
-		$stmt = $this->app->database->prepare('SELECT * FROM `moment` WHERE `parent`= :identifier');
-		$stmt->execute([':identifier' => $moment->identifier]);
-		$children = $stmt->fetchAll();
+	public function moment($identifier) {
+		$moment = Model\Moment::findByIdentifier($identifier, $this->app->database);	
+		$children = Model\Moment::findByParent($identifier, $this->app->database);
 
 		$assignments = [
 			'moment' => $moment,
@@ -45,6 +42,24 @@ class StopWatch {
 			$this->app->flash('error', 'Sorry, something went wrong!');
 		}
 		$this->app->redirect('/moment/' . $parent);
+	}
+	
+	public function start($timestamp = NULL) {
+		if($timestamp) {
+			$time = \DateTime::createFromFormat('U', $timestamp);
+		}else{
+			$time = new \DateTime();
+		}
+		try {
+			$stmt = $this->app->database->prepare('INSERT INTO `moment` VALUES(UUID(), NULL, :value, b\'1\')');
+			if(!$stmt->execute([':value' => $time->format('U')])) {
+				throw new \PDOException();
+			}
+		} catch (\PDOException $e) {
+			$this->app->flash('error', 'Sorry, something went wrong!');
+			$this->app->redirect('/');
+		}
+		$this->app->redirect('/moment/' . $this->app->database->lastInsertId());
 	}
 }
 
