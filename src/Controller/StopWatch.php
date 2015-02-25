@@ -44,22 +44,16 @@ class StopWatch {
 		$this->app->redirect('/moment/' . $parent);
 	}
 	
-	public function start($timestamp = NULL) {
-		if($timestamp) {
-			$time = \DateTime::createFromFormat('U', $timestamp);
-		}else{
-			$time = new \DateTime();
-		}
+	public function start() {
 		try {
-			$stmt = $this->app->database->prepare('INSERT INTO `moment` VALUES(UUID(), NULL, :value, b\'1\')');
-			if(!$stmt->execute([':value' => $time->format('U')])) {
-				throw new \PDOException();
-			}
+			$moment = Model\Moment::create();
+			$moment->flags = 0x1;
+			Model\Moment::persist($moment, $this->app->database);
+			$this->app->redirect('/moment/' . $moment->identifier);
 		} catch (\PDOException $e) {
-			$this->app->flash('error', 'Sorry, something went wrong!');
+			$this->app->flash('error', 'Sorry, something went wrong ('.$e->getMessage().')!');
 			$this->app->redirect('/');
 		}
-		$this->app->redirect('/moment/' . $this->app->database->lastInsertId());
 	}
 }
 

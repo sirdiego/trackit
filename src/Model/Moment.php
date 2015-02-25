@@ -1,6 +1,8 @@
 <?php
 namespace Diego\Trackit\Model;
 
+use \J20\Uuid\Uuid;
+
 class Moment {
 
 	public $identifier;
@@ -11,14 +13,10 @@ class Moment {
 
 	public $flags;
 
-	protected $new = FALSE;
-
-	public function __construct() {
-		$this->new = TRUE;
-	}
+	public $new = false;
 
 	public function isStart() {
-		return (bool) $this->flags & 1;
+		return (bool) $this->flags & 0x1;
 	}
 
 	static public function findByIdentifier($identifier, \PDO $database) {
@@ -35,28 +33,32 @@ class Moment {
 		return $moments;
 	}
 
-	static public function persist(\PDO $database) {
-		$parameters = [];
+	static public function create() {
+		$moment = new Moment();
+		$moment->identifier = Uuid::v4();
+		$date = new \DateTime();
+		$moment->value = $date->format('Y-m-d H:i:s');
+		$moment->new = true;
+		$moment->flags = 0;
 
-		if($this->uuid) {
-			$parameters['uuid'] = $this->uuid;
-		}else{
-			$parameters['uuid'] = 'NOW()';
-		}
-		if($this->parent) {
-			$parameters['parent'] = $this->parameter;
-		}else{
-			$parameters['parent'] = 'NULL';
-		}
-		if($this->value) {
-			$parameters['value'] = $this->value;
-		}else{
-			$parameters['value'] = 'NOW()';
-		}
-		if($this->flags) {
-			$parameters['flags'] = $this->flags;
-		}else{
-			$parameters['flags'] = 'b\'0\'';
+		return $moment;
+	}
+
+	static public function persist(Moment $moment, \PDO $database) {
+		if($moment->new) {
+			$stmt = $database->prepare('INSERT INTO `moment` VALUES(:identifier, :parent, :value, :flags)');
+			$result = $stmt->execute([
+				':identifier' => $moment->identifier,
+				':parent' => $moment->parent,
+				':value' => $moment->value,
+				':flags' => $moment->flags
+			]);
+			if(!$result) {
+				$error = $stmt->errorInfo();
+				throw new \PDOException($error[2], $error[1]);
+			}
+		} else {
+			throw new \Exception('Changing existing moments is not implemented yet.');
 		}
 	}
 }
