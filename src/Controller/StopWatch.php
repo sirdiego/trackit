@@ -4,14 +4,17 @@ namespace Diego\Trackit\Controller;
 use \Slim\Slim;
 use \Diego\Trackit\Model;
 
-class StopWatch {
+class StopWatch
+{
 	protected $app;
 
-	public function __construct(Slim $app) {
+	public function __construct(Slim $app)
+	{
 		$this->app = $app;
 	}
 
-	public function index() {
+	public function index()
+	{
 		$stmt = $this->app->database->query('SELECT * FROM `moment`');
 		$moments = $stmt->fetchAll();
 		$assignments = [
@@ -21,8 +24,9 @@ class StopWatch {
 		echo $this->app->view->render('index.twig', $assignments);
 	}
 
-	public function moment($identifier) {
-		$moment = Model\Moment::findByIdentifier($identifier, $this->app->database);	
+	public function moment($identifier)
+	{
+		$moment = Model\Moment::findByIdentifier($identifier, $this->app->database);
 		$children = Model\Moment::findByParent($identifier, $this->app->database);
 
 		$assignments = [
@@ -32,10 +36,11 @@ class StopWatch {
 		echo $this->app->view->render('moment.twig', $assignments);
 	}
 	
-	public function add($parent) {
+	public function add($parent)
+	{
 		try {
 			$stmt = $this->app->database->prepare('INSERT INTO `moment` VALUES (UUID(), :parent, NOW(), 0)');
-			if(!$stmt->execute([':parent' => $parent])) {
+			if (!$stmt->execute([':parent' => $parent])) {
 				throw new \PDOException();
 			}
 		} catch (\PDOException $e) {
@@ -44,7 +49,8 @@ class StopWatch {
 		$this->app->redirect('/moment/' . $parent);
 	}
 	
-	public function stop($parent) {
+	public function stop($parent)
+	{
 		try {
 			$moment = Model\Moment::create();
 			$moment->flags = Model\Moment::FLAG_STOP;
@@ -56,7 +62,8 @@ class StopWatch {
 			$this->app->redirect('/');
 		}
 	}
-	public function start() {
+	public function start()
+	{
 		try {
 			$moment = Model\Moment::create();
 			$moment->flags = Model\Moment::FLAG_START;
