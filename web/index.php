@@ -3,9 +3,9 @@ use Slim\Slim;
 use Slim\Views\Twig;
 use Diego\Trackit as Trackit;
 
-define('trackit_root', realpath('..') . DIRECTORY_SEPARATOR);
+define('TRACKIT_ROOT', realpath('..') . DIRECTORY_SEPARATOR);
 
-require_once trackit_root . 'vendor/autoload.php';
+require_once TRACKIT_ROOT . 'vendor/autoload.php';
 
 session_start();
 
@@ -14,7 +14,7 @@ $view->parserExtensions = array(
     new \Slim\Views\TwigExtension(),
 );
 
-$config = include trackit_root . 'config/config.php';
+$config = include TRACKIT_ROOT . 'config/config.php';
 $config = array_merge($config, [
 	'view' => $view,
 ]);
