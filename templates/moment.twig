@@ -9,6 +9,9 @@
 {% if moment.isStart %}
 <p>Stopwatch started here.</p>
 {% endif %}
+{% if moment.isStop %}
+<p>Stopwatch stopped here.</p>
+{% endif %}
 {% if children|length > 0 %}
 <ul>
 {% for child in children %}
@@ -17,4 +20,5 @@
 </ul>
 {% endif %}
 <p><a href="{{ urlFor('addMoment', {'moment': moment.identifier}) }}">add</a></p>
+<p><a href="{{ urlFor('stop', {'parent': moment.identifier}) }}">stop</a></p>
 {% endblock %}

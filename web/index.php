@@ -46,5 +46,10 @@ $app->get('/start/', function () use ($app) {
 	$controller->start();
 })->name('start');
 
+$app->get('/stop/:parent', function ($parent) use ($app) {
+	$controller = new Trackit\Controller\StopWatch($app);
+	$controller->stop($parent);
+})->name('stop');
+
 $app->run();
 

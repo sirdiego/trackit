@@ -44,10 +44,22 @@ class StopWatch {
 		$this->app->redirect('/moment/' . $parent);
 	}
 	
+	public function stop($parent) {
+		try {
+			$moment = Model\Moment::create();
+			$moment->flags = Model\Moment::FLAG_STOP;
+			$moment->parent = $parent;
+			Model\Moment::persist($moment, $this->app->database);
+			$this->app->redirect('/moment/', $parent);
+		} catch (\PDOException $e) {
+			$this->app->flash('error', 'Sorry, something went wrong ('.$e->getMessage().')!');
+			$this->app->redirect('/');
+		}
+	}
 	public function start() {
 		try {
 			$moment = Model\Moment::create();
-			$moment->flags = 0x1;
+			$moment->flags = Model\Moment::FLAG_START;
 			Model\Moment::persist($moment, $this->app->database);
 			$this->app->redirect('/moment/' . $moment->identifier);
 		} catch (\PDOException $e) {

@@ -5,6 +5,9 @@ use \J20\Uuid\Uuid;
 
 class Moment {
 
+	const FLAG_START = 1;
+	const FLAG_STOP = 2;
+
 	public $identifier;
 
 	public $parent;
@@ -16,7 +19,15 @@ class Moment {
 	public $new = false;
 
 	public function isStart() {
-		return (bool) $this->flags & 0x1;
+		return (bool)$this->isFlagSet(self::FLAG_START);
+	}
+
+	public function isStop() {
+		return (bool)$this->isFlagSet(self::FLAG_STOP);
+	}
+
+	protected function isFlagSet($flag) {
+		return $this->flags & $flag;
 	}
 
 	static public function findByIdentifier($identifier, \PDO $database) {
@@ -47,12 +58,11 @@ class Moment {
 	static public function persist(Moment $moment, \PDO $database) {
 		if($moment->new) {
 			$stmt = $database->prepare('INSERT INTO `moment` VALUES(:identifier, :parent, :value, :flags)');
-			$result = $stmt->execute([
-				':identifier' => $moment->identifier,
-				':parent' => $moment->parent,
-				':value' => $moment->value,
-				':flags' => $moment->flags
-			]);
+			$stmt->bindValue(':identifier', $moment->identifier);
+			$stmt->bindValue(':parent', $moment->parent);
+			$stmt->bindValue(':value', $moment->value);
+			$stmt->bindValue(':flags', $moment->flags, \PDO::PARAM_INT);
+			$result = $stmt->execute();
 			if(!$result) {
 				$error = $stmt->errorInfo();
 				throw new \PDOException($error[2], $error[1]);
