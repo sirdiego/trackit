@@ -7,6 +7,9 @@
         "twig/twig": "~1.18",
         "j20/php-uuid": "dev-master"
     },
+    "require-dev": {
+        "codeception/codeception": "~2.0"
+    },
     "authors": [
         {
             "name": "diego",
