@@ -3,4 +3,3 @@ composer.lock
 config/config.php
 
 tests/_output/*
-/tests/acceptance/AcceptanceTester.php
