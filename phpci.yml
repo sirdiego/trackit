@@ -15,4 +15,5 @@ test:
   php_docblock_checker:
     allowed_warnings: 0
   codeception:
+    config: "."
 
