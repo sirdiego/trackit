@@ -16,4 +16,5 @@ test:
     allowed_warnings: 0
   codeception:
     config: "."
+    args: "--no-colors"
 
