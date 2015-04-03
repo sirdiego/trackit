@@ -1,5 +1,7 @@
 build_settings:
   verbose: false
+  ignore:
+    - "tests"
 
 setup:
 
