@@ -12,7 +12,7 @@ test:
     allowed_errors: 0
     tab_width: 4
   php_loc:
-  php_unit:
   php_docblock_checker:
     allowed_warnings: 0
+  codeception:
 
